@@ -11,6 +11,10 @@ class _HomeState extends State<Home> {
 
   Completer<GoogleMapController> _controller = Completer();
 
+  _onMapCreated(GoogleMapController googleMapController){
+    _controller.complete(googleMapController);
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,9 +28,7 @@ class _HomeState extends State<Home> {
             target: LatLng(37.42796133580664, -122.085749655962),
             zoom: 15
           ),
-          onMapCreated: (GoogleMapController controller){
-            _controller.complete(controller);
-          },
+          onMapCreated: _onMapCreated
         ),
       ),
     );
