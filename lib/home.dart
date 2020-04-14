@@ -15,11 +15,30 @@ class _HomeState extends State<Home> {
     _controller.complete(googleMapController);
 
   }
+
+  _movimentarCamera() async{
+    GoogleMapController googleMapController = await _controller.future;
+    googleMapController.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: LatLng(37.42796133580664, -122.085749655962),
+          zoom: 19,
+          tilt: 0, //inclinaçao
+          bearing: 30 //rotação
+        )
+      )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Mapas e Geolocalização"),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.done),
+        onPressed: _movimentarCamera
       ),
       body: Container(
         child: GoogleMap(
