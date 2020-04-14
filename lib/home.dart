@@ -149,6 +149,48 @@ class _HomeState extends State<Home> {
     );
   }
 
+  _recuperarLocalParaEndereco() async{
+      List<Placemark> listaEnderecos = await Geolocator().placemarkFromAddress(" Sacramento Rua Silva Jardim, 414");
+      print(listaEnderecos.length.toString());
+      if(listaEnderecos != null && listaEnderecos.length > 0){
+        Placemark endereco = listaEnderecos[0];
+        String resultado = "\n" +endereco.administrativeArea;
+        resultado += "\n" +endereco.subAdministrativeArea;
+        resultado += "\n" +endereco.locality;
+        resultado += "\n" +endereco.subLocality;
+        resultado += "\n" +endereco.country;
+        resultado += "\n" +endereco.thoroughfare;
+        resultado += "\n" +endereco.subThoroughfare;
+        resultado += "\n" +endereco.isoCountryCode;
+        resultado += "\n" +endereco.postalCode;
+
+        print(resultado);
+      }else {
+
+      }
+  }
+
+  _recuperarLocalParaEnderecoParaLatLng() async{
+    List<Placemark> listaEnderecos = await Geolocator().placemarkFromCoordinates(-19.869821, -47.441606);
+    print(listaEnderecos.length.toString());
+    if(listaEnderecos != null && listaEnderecos.length > 0){
+      Placemark endereco = listaEnderecos[0];
+      String resultado = "\n" +endereco.administrativeArea;
+      resultado += "\n" +endereco.subAdministrativeArea;
+      resultado += "\n" +endereco.locality;
+      resultado += "\n" +endereco.subLocality;
+      resultado += "\n" +endereco.country;
+      resultado += "\n" +endereco.thoroughfare;
+      resultado += "\n" +endereco.subThoroughfare;
+      resultado += "\n" +endereco.isoCountryCode;
+      resultado += "\n" +endereco.postalCode;
+
+      print(resultado);
+    }else {
+
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -156,7 +198,9 @@ class _HomeState extends State<Home> {
     //_carregarPolilines();
    // _recuperarLocalizacaoAtual();
     //_carregarMarcadores();
-    _adicionarListenerLocalizacao();
+    //_adicionarListenerLocalizacao();
+    //_recuperarLocalParaEndereco();
+    _recuperarLocalParaEnderecoParaLatLng();
     super.initState();
   }
   @override
