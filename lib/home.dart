@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:quiver/core.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Home extends StatefulWidget {
@@ -10,10 +11,51 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   Completer<GoogleMapController> _controller = Completer();
-
+  Set<Marker> _marcadores = {};
   _onMapCreated(GoogleMapController googleMapController){
     _controller.complete(googleMapController);
 
+  }
+
+  _carregarMarcadores(){
+
+    Set<Marker> marcadoresLocal = {};
+
+    Marker marcadorRodoviaria = Marker(
+      markerId: MarkerId("rodoviaria"),
+      position: LatLng(-19.869766, -47.441681),
+      infoWindow: InfoWindow(
+        title: "Rodoviária de Sacramento"
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(
+        BitmapDescriptor.hueBlue
+      ),
+      rotation: 25,
+      onTap: (){
+        print("clicado rodoviaria");
+      },
+    );
+    Marker marcadorFarmacia = Marker(
+        markerId: MarkerId("farmacia"),
+        position: LatLng(-19.870422, -47.441660),
+      infoWindow: InfoWindow(
+        title: "Farmácia Canastra"
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(
+        BitmapDescriptor.hueCyan
+      ),
+      rotation: 10,
+      onTap: (){
+        print("clicado farmacia");
+      },
+    );
+
+    marcadoresLocal.add(marcadorRodoviaria);
+    marcadoresLocal.add(marcadorFarmacia);
+
+    setState(() {
+      _marcadores = marcadoresLocal;
+    });
   }
 
   _movimentarCamera() async{
@@ -21,7 +63,7 @@ class _HomeState extends State<Home> {
     googleMapController.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
-          target: LatLng(37.42796133580664, -122.085749655962),
+          target: LatLng(-19.869776, -47.441702),
           zoom: 19,
           tilt: 0, //inclinaçao
           bearing: 30 //rotação
@@ -30,6 +72,12 @@ class _HomeState extends State<Home> {
     );
   }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    _carregarMarcadores();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,10 +92,11 @@ class _HomeState extends State<Home> {
         child: GoogleMap(
           mapType: MapType.normal,
           initialCameraPosition: CameraPosition(
-            target: LatLng(37.42796133580664, -122.085749655962),
+            target: LatLng(-19.869120, -47.441681),
             zoom: 15
           ),
-          onMapCreated: _onMapCreated
+          onMapCreated: _onMapCreated,
+          markers: _marcadores,
         ),
       ),
     );
