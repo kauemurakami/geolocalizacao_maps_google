@@ -13,9 +13,31 @@ class _HomeState extends State<Home> {
   Completer<GoogleMapController> _controller = Completer();
   Set<Marker> _marcadores = {};
   Set<Polygon> _poligonos = {};
+  Set<Polyline> _polylines = {};
   _onMapCreated(GoogleMapController googleMapController){
     _controller.complete(googleMapController);
 
+  }
+
+  _carregarPolilines(){
+    Set<Polyline> polilinesLocal = {};
+    Polyline polyline = Polyline(
+      polylineId: PolylineId("linha1"),
+      color: Colors.blue,
+      width: 5,
+      startCap: Cap.buttCap,
+      endCap: Cap.roundCap,
+      jointType: JointType.round,
+      points: [
+        LatLng(-19.870371, -47.441606),
+        LatLng(-19.870745, -47.442818),
+        LatLng(-19.872258, -47.443322)
+      ]
+    );
+    polilinesLocal.add(polyline);
+    setState(() {
+      _polylines = polilinesLocal;
+    });
   }
 
   _carregarPolygons(){
@@ -99,7 +121,8 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     // TODO: implement initState
-    _carregarPolygons();
+    //_carregarPolygons();
+    _carregarPolilines();
     _carregarMarcadores();
     super.initState();
   }
@@ -122,7 +145,8 @@ class _HomeState extends State<Home> {
           ),
           onMapCreated: _onMapCreated,
           markers: _marcadores,
-          polygons: _poligonos,
+          //polygons: _poligonos,
+          polylines: _polylines,
         ),
       ),
     );
