@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:quiver/core.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -11,6 +11,10 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   Completer<GoogleMapController> _controller = Completer();
+  CameraPosition _posicaoCamera = CameraPosition(
+    target : LatLng(-19.869821, -47.441606),
+    zoom: 16
+  );
   Set<Marker> _marcadores = {};
   Set<Polygon> _poligonos = {};
   Set<Polyline> _polylines = {};
@@ -108,22 +112,34 @@ class _HomeState extends State<Home> {
     GoogleMapController googleMapController = await _controller.future;
     googleMapController.animateCamera(
       CameraUpdate.newCameraPosition(
-        CameraPosition(
-          target: LatLng(-19.869776, -47.441702),
-          zoom: 19,
-          tilt: 0, //inclinaçao
-          bearing: 30 //rotação
-        )
+        _posicaoCamera
       )
     );
+  }
+  _recuperarLocalizacaoAtual() async{
+    Position position = await Geolocator().getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.best
+    );
+    setState(() {
+      _posicaoCamera = CameraPosition(
+        target: LatLng(position.latitude, position.longitude),
+        zoom: 17
+      );
+      _movimentarCamera();
+    });
+  }
+
+  _adicionarListenerLocalizacao(){
+
   }
 
   @override
   void initState() {
     // TODO: implement initState
     //_carregarPolygons();
-    _carregarPolilines();
-    _carregarMarcadores();
+    //_carregarPolilines();
+   // _recuperarLocalizacaoAtual();
+    //_carregarMarcadores();
     super.initState();
   }
   @override
@@ -139,14 +155,12 @@ class _HomeState extends State<Home> {
       body: Container(
         child: GoogleMap(
           mapType: MapType.normal,
-          initialCameraPosition: CameraPosition(
-            target: LatLng(-19.869120, -47.441681),
-            zoom: 15
-          ),
+          initialCameraPosition: _posicaoCamera,
           onMapCreated: _onMapCreated,
-          markers: _marcadores,
+          myLocationEnabled: true,
+          //markers: _marcadores,
           //polygons: _poligonos,
-          polylines: _polylines,
+          //polylines: _polylines,
         ),
       ),
     );
