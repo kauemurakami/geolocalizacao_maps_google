@@ -130,7 +130,23 @@ class _HomeState extends State<Home> {
   }
 
   _adicionarListenerLocalizacao(){
-
+    var geolocator = Geolocator();
+    var locationOptions = LocationOptions(
+      accuracy: LocationAccuracy.best,
+      distanceFilter: 10
+    );
+    geolocator.getPositionStream(locationOptions)
+        .listen(
+          (Position position){
+            setState(() {
+              _posicaoCamera = CameraPosition(
+                target: LatLng(position.latitude, position.longitude),
+                zoom: 17
+              );
+              _movimentarCamera();
+            });
+          }
+    );
   }
 
   @override
@@ -140,6 +156,7 @@ class _HomeState extends State<Home> {
     //_carregarPolilines();
    // _recuperarLocalizacaoAtual();
     //_carregarMarcadores();
+    _adicionarListenerLocalizacao();
     super.initState();
   }
   @override
