@@ -12,15 +12,39 @@ class _HomeState extends State<Home> {
 
   Completer<GoogleMapController> _controller = Completer();
   Set<Marker> _marcadores = {};
+  Set<Polygon> _poligonos = {};
   _onMapCreated(GoogleMapController googleMapController){
     _controller.complete(googleMapController);
 
   }
 
+  _carregarPolygons(){
+    Set<Polygon> poligonosLocal = {};
+
+    Polygon polygon1 = Polygon(
+      polygonId: PolygonId("poligon1"),
+      fillColor: Colors.transparent,
+        strokeColor: Colors.purpleAccent,
+      strokeWidth: 5,
+      points: [
+        LatLng(-19.867909, -47.441241),
+        LatLng(-19.872288, -47.439267),
+        LatLng(-19.870725, -47.442743)
+      ],
+      consumeTapEvents: true,
+      onTap: (){
+        print("clicado na area denotada");
+      }
+    );
+
+    poligonosLocal.add(polygon1);
+    setState(() {
+      _poligonos = poligonosLocal;
+    });
+  }
   _carregarMarcadores(){
 
     Set<Marker> marcadoresLocal = {};
-
     Marker marcadorRodoviaria = Marker(
       markerId: MarkerId("rodoviaria"),
       position: LatLng(-19.869766, -47.441681),
@@ -75,6 +99,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     // TODO: implement initState
+    _carregarPolygons();
     _carregarMarcadores();
     super.initState();
   }
@@ -97,6 +122,7 @@ class _HomeState extends State<Home> {
           ),
           onMapCreated: _onMapCreated,
           markers: _marcadores,
+          polygons: _poligonos,
         ),
       ),
     );
